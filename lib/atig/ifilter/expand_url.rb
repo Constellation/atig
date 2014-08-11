@@ -17,7 +17,7 @@ module Atig
 
       def call(status)
         target = short_url_regexp
-        entities = (entities = status.entities).nil? ? [] : entities.urls
+        entities = (entities = status.entities).nil? ? [] : entities
         status.merge text: status.text.gsub(target) {|url|
           unless entities.nil? or entities.empty?
             @cache[url] ||= search_url_from_entities(url, entities)
@@ -54,9 +54,18 @@ module Atig
 
       def search_url_from_entities(url, entities)
         expanded_url = nil
-        entities.reject! do |entity|
-          entity.url == url &&
-            (expanded_url = entity.expanded_url)
+        unless entities.media.nil?
+            entities.media.reject! do |entity|
+              entity.url == url &&
+                (expanded_url = entity.media_url)
+            end
+        end
+        return expanded_url unless expanded_url.nil?
+        unless entities.urls.nil?
+            entities.urls.reject! do |entity|
+              entity.url == url &&
+                (expanded_url = entity.expanded_url)
+            end
         end
         expanded_url
       end
