@@ -86,7 +86,7 @@ END
       def prefix(u)
         nick = u.screen_name
         nick = "@#{nick}" if @opts.athack
-        user = "id=%.9d" % u.id
+        user = "%.9d" % u.id
         host = "twitter"
         host += "/protected" if u.protected
 

@@ -14,7 +14,7 @@ module Atig
         nick,*_ = args
 
         Atig::Command::Info::user(db, api, nick) do|user|
-          id = "id=#{user.id}"
+          id = "#{user.id}"
           host = "twitter.com"
           host += "/protected" if user.protected
           desc      = user.name

@@ -41,11 +41,21 @@ END
         @session.post @prefix, PART, @name, msg
       end
 
+      def prefix2(status, u)
+        return prefix u if status.user.nil?
+        nick = u.screen_name
+        nick = "@#{nick}" if @opts.athack
+        user = "%.9d" % u.id
+        host = status.user.profile_image_url
+
+        Net::IRC::Prefix.new("#{nick}!#{user}@#{host}")
+      end
+
       def message(entry, command = PRIVMSG)
         GC.start
         user        = entry.user
         screen_name = user.screen_name
-        prefix      = prefix user
+        prefix      = prefix2 entry.status, user
         str         = run_filters entry
 
         @session.post prefix, command, @name, str
