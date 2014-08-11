@@ -103,6 +103,11 @@ END
       end
 
       def on_user(m)
+        puts "INIT #{self} #{@thread_group}"
+        if @thread_group
+          post server_name, MODE, @nick, "+o"
+          return
+        end
         super
         @thread_group = ThreadGroup.new
         @thread_group.add Thread.current
